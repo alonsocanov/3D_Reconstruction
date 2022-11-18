@@ -1,0 +1,6 @@
+build
+**/**.DS_Store
+**/**.jpg
+**.o
+**.png
+.vscode
