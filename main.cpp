@@ -3,6 +3,10 @@
 #include "opencv2/xfeatures2d.hpp"
 #include <iostream>
 
+void essentialMatrix()
+{
+}
+
 void showImg(cv::Mat image, int wait = 0, std::string win_name = "Image")
 {
     cv::namedWindow(win_name, cv::WINDOW_AUTOSIZE);
