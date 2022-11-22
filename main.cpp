@@ -3,10 +3,6 @@
 #include "opencv2/xfeatures2d.hpp"
 #include <iostream>
 
-void essentialMatrix()
-{
-}
-
 void showImg(cv::Mat image, int wait = 0, std::string win_name = "Image")
 {
     cv::namedWindow(win_name, cv::WINDOW_AUTOSIZE);
@@ -29,8 +25,9 @@ int main(int argc, char **argv)
 {
     cv::Mat img_l, img_r, img_concat, gray_l, gray_r;
     std::string project_path = "/Users/acano/Developer/Image_Processing/3D_Reconstruction";
-    std::string img_path_left = project_path + "/data/teddy/left.png";
-    std::string img_path_right = project_path + "/data/teddy/right.png";
+    std::string data_path = project_path + "/data/cones";
+    std::string img_path_left = data_path + "/left.png";
+    std::string img_path_right = data_path + "/right.png";
     img_l = cv::imread(img_path_left, cv::IMREAD_COLOR);
     img_r = cv::imread(img_path_right, cv::IMREAD_COLOR);
     bool file_exists;
@@ -88,8 +85,53 @@ int main(int argc, char **argv)
     cv::Mat disparity;
     cv::Ptr<cv::StereoMatcher> p_stereo = cv::StereoSGBM::create(0, 32, 5);
     p_stereo->compute(rectified_l, rectified_r, disparity);
-    cv::imwrite(project_path + "data/teddy/disparity.jpg", disparity);
+    cv::imwrite(data_path + "/disparity.jpg", disparity);
     // showImg(disparity);
+    // essential matrix
+    std::vector<cv::Mat> rvecs, tvecs;
+    // open chessboard images and extract corner points
+    int CameraCalibrator::addChessboardPoints(const std::vector<std::string> &file_list, cv::Size &board_size)
+    {
+        // the points on the chessboard
+        std::vector<cv::Points2f> img_corners;
+        std::vector<cv::Points3f> object_corners;
+        // 3D scene points:
+        // initialize the chesboard corners in the chessboard reference frame
+        // the corners are at 3D location (x, y, z) = (i, j, 0)
+        for (int i = 0; i < board_size.height; i++)
+        {
+            for (int j = 0; j < board_size.width; j++)
+            {
+                object_corners.push_back(cv::Ponts3f(i, j, 0.0f));
+            }
+        }
+        // 2D image points to contain chessboard image
+        cv::Mat img;
+        int successes = 0;
+        // for all viewpoints
+        for (int i = 0; i < file_list.size(); i++)
+        {
+            // open image
+            img = cv::imread(file_list[i], 0);
+            // get the chessboard corners
+            bool found = cv::findChessboardCorners(img, board_size, img_corners);
+            // get subpixel accuracy on the corners
+            // _, _, max number of iterations, min accuracy
+            cv::cornerSubPix(img, img_corners, cv::Size(5, 5), cv::Size(-1, -1), cv::TermCriteria(cv::TermCriteria::MAX_ITER + cv::TermCriteria::EPS, 30, 0.1));
+            // if we have a good board add to our data
+            if (img_corners.size() == board_size.area())
+            {
+                // add image and scene points from one view
+                addPoints(img_corners, object_corners);
+                successes++;
+            }
+            // draw the corners
+            cv::drawChessboardCorners(img, board_size, img_corners, found);
+            cv::imshow("Corners", img);
+            cv::waitKey(100);
+        }
+        return successes;
+    }
 
     return 0;
 }
