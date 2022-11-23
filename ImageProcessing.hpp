@@ -6,7 +6,7 @@
 
 #include <iostream>
 
-void showImg(cv::Mat image, int wait = 0, std::string win_name = "Image");
+void showImg(cv::Mat image, int wait, std::string win_name);
 
 bool checkImgData(cv::Mat img, std::string path);
 

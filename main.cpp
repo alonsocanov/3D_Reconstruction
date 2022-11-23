@@ -14,12 +14,12 @@ int main(int argc, char **argv)
     img_l = cv::imread(img_path_left, cv::IMREAD_COLOR);
     img_r = cv::imread(img_path_right, cv::IMREAD_COLOR);
     bool file_exists;
-    file_exists = ImageProcessing::checkImgData(img_l, img_path_left);
+    file_exists = checkImgData(img_l, img_path_left);
     if (!file_exists)
     {
         return -1;
     }
-    file_exists = ImageProcessing::checkImgData(img_r, img_path_right);
+    file_exists = checkImgData(img_r, img_path_right);
     if (!file_exists)
     {
         return -1;
