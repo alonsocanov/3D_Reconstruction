@@ -71,7 +71,6 @@ int main(int argc, char **argv)
     cv::imwrite(data_path + "/disparity.jpg", disparity);
     // showImg(disparity);
     // essential matrix
-    // std::vector<cv::Mat> rvecs, tvecs;
 
     return 0;
 }
