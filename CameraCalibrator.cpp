@@ -96,7 +96,7 @@ double CameraCalibrator::calibrate(cv::Size &img_size)
     bool must_init_undisort = true;
     // start calibration
     // 3D points, image points, image size, output camera matrix, output distortion matrix, Rs, Ts, set options
-    return calibrateCamera(this->objectPoints, this->imagePoints, img_size, cameraMatrix, distCoeffs, this->rvecs, this->tvecs, flag);
+    return calibrateCamera(this->objectPoints, this->imagePoints, img_size, this->cameraMatrix, this->distCoeffs, this->rvecs, this->tvecs, flag);
 }
 
 void CameraCalibrator::setCalibrationFlag(bool radial8CoeffEnabled = false, bool tangentialParamEnabled = false)
