@@ -37,6 +37,11 @@ cv::Vec3d CameraCalibrator::triangulate(const cv::Mat &p1, const cv::Mat &p2, co
     cv::solve(A, B, X, cv::DECOMP_SVD);
     return X;
 }
+
+void CameraCalibrator::triangulate(const cv::Mat &p1, const cv::Mat &p2, const std::vector<cv::Vec2d> &pts1, const std::vector<cv::Vec2d> &pts2, std::vector<cv::Vec3d> &pts3D)
+{
+}
+
 // open chessboard images and extract corner points
 int CameraCalibrator::addChessboardPoints(const std::vector<std::string> &file_list, cv::Size &board_size)
 {
@@ -96,14 +101,18 @@ double CameraCalibrator::calibrate(cv::Size &img_size)
     bool must_init_undisort = true;
     // start calibration
     // 3D points, image points, image size, output camera matrix, output distortion matrix, Rs, Ts, set options
-    this->cameraMatrix = this->calibrateCamera(this->objectPoints, this->imagePoints, img_size, this->cameraMatrix, this->distCoeffs, this->rvecs, this->tvecs, flag);
-    return this->cameraMatrix;
+    double camera_calibrate = cv::calibrateCamera(this->objectPoints, this->imagePoints, img_size, this->cameraMatrix, this->distCoeffs, this->rvecs, this->tvecs, flag);
+    return camera_calibrate;
 }
 
 void CameraCalibrator::setCalibrationFlag(bool radial8CoeffEnabled = false, bool tangentialParamEnabled = false)
 {
     bool radial8CoeffEnabled = radial8CoeffEnabled;
     bool tangentialParamEnabled = tangentialParamEnabled;
+}
+
+cv::Mat CameraCalibrator::remap(const cv::Mat &image)
+{
 }
 
 cv::Mat CameraCalibrator::getCameraMatrix()

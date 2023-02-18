@@ -28,9 +28,11 @@ int main()
     }
 
     cv::Mat img = cv::imread(files[0]);
+    cv::Mat cameraMatrix = cal.getCameraMatrix();
+    cv::Mat distCoeffs = cal.getDistCoeffs();
 
     cv::Size img_size = img.size();
-    cv::Mat = cameraMatrix = cal.calibrate(img_size);
+    double camera_calibrate = cal.calibrate(img_size);
 
     std::cout << "Calibration matrix: " << std::endl;
 
@@ -60,7 +62,7 @@ int main()
     cv::Mat matchImage;
 
     cv::namedWindow("img1");
-    cv::drawMatches(image1, keypoints1, image2, keypoints2, matches, matchImage, cv::Scalar::all(-1), Scalar::all(-1), vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
+    cv::drawMatches(image1, keypoints1, image2, keypoints2, matches, matchImage, cv::Scalar::all(-1), cv::Scalar::all(-1), std::vector<char>(), cv::DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
     cv::imwrite("matches.jpg", matchImage);
 
     // Convert keypoints into Point2f
@@ -113,9 +115,9 @@ int main()
     }
     // undistort and normalize the image points
     std::vector<cv::Vec2d> points1u;
-    cv::undistortPoints(inlierPts1, points1u, cameraMatrix, cal.distCoeffs);
+    cv::undistortPoints(inlierPts1, points1u, cameraMatrix, distCoeffs);
     std::vector<cv::Vec2d> points2u;
-    cv::undistortPoints(inlierPts2, points2u, cameraMatrix, cal.distCoeffs);
+    cv::undistortPoints(inlierPts2, points2u, cameraMatrix, distCoeffs);
 
     // Triangulation
     std::vector<cv::Vec3d> points3D;
